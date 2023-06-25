@@ -8,6 +8,36 @@
 
 using namespace std;
 
+// Prompting User to enter the date
+string date() {
+    string inputDate;
+    cout << "Please enter the date of your workout (MM/DD/YYYY): ";
+    getline(cin, inputDate);
+
+    // Check if the input date has the correct format (MM/DD/YYYY)
+    if (inputDate.size() != 10 || inputDate[2] != '/' || inputDate[5] != '/') {
+        cout << "Invalid date. Please enter a date in the format MM/DD/YYYY. \n";
+        exit(1);
+    }
+
+    // Extract month, day, and year from the input date
+    string validMonth = inputDate.substr(0, 2);
+    string validDay = inputDate.substr(3, 2);
+    string validYear = inputDate.substr(6, 4);
+
+    // Convert extracted components to integers
+    int month = stoi(validMonth);
+    int day = stoi(validDay);
+    int year = stoi(validYear);
+
+    // Perform additional checks for valid dates
+    if (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31) {
+        cout << "Invalid date. Please enter a valid date. \n";
+        exit(1);
+    }
+
+    return validMonth + "/" + validDay + "/" + validYear;  // Return date in MM/DD/YYYY format
+}
 
 // Prompting User to add a day and its associated focus
 pair<string, string> day() {
@@ -17,7 +47,7 @@ pair<string, string> day() {
 
     map<string, string> workoutDays {
             {"Monday", "Arms & Abs"},
-            {"Tuesday", "Full Body-Lower Focus "},
+            {"Tuesday", "Full Body-Lower Focus"},
             {"Wednesday", "Chest, Back, & Abs"},
             {"Thursday", "Abs & Ass"},
             {"Friday", "Total Body"},
@@ -35,39 +65,25 @@ pair<string, string> day() {
     }
 }
 
-// Prompting User to enter the date
-string date() {
-    string inputDate;
-    cout << "Please enter the date of your workout: ";
-    getline(cin, inputDate);
-
-// Check if the input date has the correct format
-// The size of 10 ==  format "DD/MM/YYYY"
-
-    if (inputDate.size() != 10 || inputDate[3] != '/' || inputDate[6] != '/') {
-        cout << "Invalid date. Please enter a date in the format YYYY/MM/DD. \n";
-        exit(1);
-    }
-    // Basic Check for valid dates
-    string validDay = inputDate.substr(0,2);
-    string validMonth = inputDate.substr(3,2);
-    string validYear = inputDate.substr(6,4);
-    int day = stoi(validDay);
-    int month = stoi (validMonth);
-    int year = stoi(validYear);
-
-    if (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31) {
-        cout << "Invalid date. Please enter a valid date. \n";
-        exit(1);
-    }
-    return inputDate;
-}
-
-// Prompting User to add the instructors name
+// Prompting User to add the instructor's name
 string workoutInstructor() {
     string inputWorkoutInstructor;
     cout << "Please enter the name of your instructor: ";
     getline(cin, inputWorkoutInstructor);
+
+    // Check if the name is empty
+    if (inputWorkoutInstructor.empty()) {
+        cout << "Invalid input. Please enter a valid instructor name. \n";
+        exit(1);
+    }
+
+    // Check if the name contains any non-alphabetic characters
+    for (char ch : inputWorkoutInstructor) {
+        if (!isalpha(ch) && !isspace(ch)) {
+            cout << "Invalid input. Please enter a valid instructor name. \n";
+            exit(1);
+        }
+    }
     return inputWorkoutInstructor;
 }
 
@@ -76,9 +92,9 @@ string data() {
     string inputIncline;
     cout << "Was there an incline? (y/n only): ";
     cin >> inputIncline;
-    if (inputIncline == "Y" || inputIncline == "y" || inputIncline == "n" || inputIncline == "N") {
-    } else {
-        cout << "Invalid input ";
+    if (inputIncline != "Y" && inputIncline != "y" && inputIncline != "n" && inputIncline != "N") {
+        cout << "Invalid input. Please enter 'Y' or 'N' only. \n";
+        exit(1);
     }
     cin.ignore();  // Ignore the newline character left by cin
     return inputIncline;
@@ -87,53 +103,45 @@ string data() {
 // Prompting user to add Treadmill data
 int treadmillSprint() {
     string input;
-    cout << "What was your fastest spring level at? ";
+    cout << "What was your fastest sprint level at? ";
     getline(cin, input);
     return stoi(input);
 }
 
-void deleteWorkout(const string& targetDate) {
+void deleteWorkout(string targetDate) {
     ifstream file("WorkoutData.txt");
     ofstream tempFile("temp.txt");
     string line;
-    vector<string> workout;
+    bool deleteSection = false;
 
     while (getline(file, line)) {
-        if (line.find("Day of the Week: ") == 0) {  // Start of a new workout
-            // If the last workout doesn't contain the target date, write it to the temp file
-            if (!workout.empty()) {
-                string workoutStr = accumulate(workout.begin(), workout.end(), string(""));
-                if (workoutStr.find(targetDate) == string::npos) {
-                    for (const auto& l : workout) {
-                        tempFile << l << "\n";
-                    }
-                }
-                workout.clear();
-            }
+        // If we find the date to delete, set flag to true to start deleting
+        if (line.find("Workout Date: " + targetDate) != string::npos) {
+            deleteSection = true;
         }
-        workout.push_back(line);
-    }
-    // Don't forget to handle the last workout
-    if (!workout.empty()) {
-        string workoutStr = accumulate(workout.begin(), workout.end(), string(""));
-        if (workoutStr.find(targetDate) == string::npos) {
-            for (const auto& l : workout) {
-                tempFile << l << "\n";
-            }
+
+        // If we find a new workout while in delete mode, stop deleting
+        if (deleteSection && line.find("Workout Date: ") != string::npos && line.find(targetDate) == string::npos) {
+            deleteSection = false;
+        }
+
+        // If not in delete mode, write the line to the temp file
+        if (!deleteSection) {
+            tempFile << line << "\n";
         }
     }
 
     file.close();
     tempFile.close();
 
-    // Remove the original file and rename the temporary file
+    // Delete the original file and rename the temporary file
     remove("WorkoutData.txt");
     rename("temp.txt", "WorkoutData.txt");
 }
 
 
 
-// Main function
+
 int main() {
     string input;
     int choice;
@@ -141,19 +149,18 @@ int main() {
     getline(cin, input);
     choice = stoi(input);
 
-    if(choice == 1) {
-        pair<string, string> dayOfWorkout = day();
+    if (choice == 1) {
         string workoutDate = date();
+        pair<string, string> dayOfWorkout = day();
         string instructorName = workoutInstructor();
         string inclineData = data();
         int sprintData = treadmillSprint();
 
         ofstream outfile;
         outfile.open("WorkoutData.txt", ios::app); // Append to the existing file
-
+        outfile << "Workout Date: " << workoutDate << "\n";
         outfile << "Day of the Week: " << dayOfWorkout.first << "\n";
         outfile << "Workout Focus: " << dayOfWorkout.second << "\n";
-        outfile << "Workout Date: " << workoutDate << "\n";
         outfile << "Instructor Name: " << instructorName << "\n";
         outfile << "Incline Data: " << inclineData << "\n";
         outfile << "Sprint Data: " << sprintData << "\n";
@@ -162,7 +169,7 @@ int main() {
         outfile.close();
     } else if (choice == 2) {
         string targetDate;
-        cout << "Enter the date of the workout you want to delete: ";
+        cout << "Enter the date of the workout you want to delete (MM/DD/YYYY): ";
         getline(cin, targetDate);
         deleteWorkout(targetDate);
     } else if (choice == 3) {
