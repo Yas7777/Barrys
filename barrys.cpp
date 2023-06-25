@@ -1,9 +1,4 @@
-//
-// Created by Yasmeen Abdul Azeem on 6/18/23.
-//
-
 #include "barrys.h"
-
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -12,21 +7,28 @@
 
 using namespace std;
 
-
 // Prompting User to add a day
-    string day() {
-        string input;
-        cout << "Please enter the day: ";
-        getline(cin, input);
+pair<string, string> day() {
 
-        if (input == "Monday" || input == "Tuesday" || input == "Wednesday" || input == "Thursday"
-            || input == "Friday" || input == "Saturday" || input == "Sunday") {
-        } else {
-            cout << "Invalid input. Please enter a valid day of the week. \n";
-        }
+    string input;
+    cout << " Please enter the day";
+    map<string, string> workoutDays {
+            {"Monday", "Arms & Abs"},
+            {"Tuesday", "Full Body-Lower Focus "},
+            {"Wednesday", "Chest, Back, & Abs"},
+            {"Thursday", "Abs & Ass"},
+            {"Friday", "Total Body"},
+            {"Saturday", "Full Body-Upper Focus"},
+            {"Sunday", "Total Body"}
+    };
 
-        return input;
+    if (input == "Monday" || "Tuesday" || "Wednesday" || "Thursday" || "Friday" || "Saturday" || "Sunday") {
+        return make_pair(input, workoutDays[input]);
+    } else {
+        cout << "Invalid input. Please enter a valid day of the week. \n";
+        return make_pair("", "");
     }
+}
 
 // Prompting User to enter the date
     string date() {
@@ -45,7 +47,7 @@ using namespace std;
     }
 
 // Prompting user to add Treadmill data
-    string TreadmillData() {
+    string data() {
         string inputIncline;
         cout << "Was there an incline? (y/n only): ";
         cin >> inputIncline;
@@ -57,17 +59,52 @@ using namespace std;
     }
 
 // Prompting user to add Treadmill data
-int treadmillDatatwo() {
+int treadmillSprint() {
     int inputSprint;
     cout << "What was your fastest spring level at?";
     cin >> inputSprint;
     return inputSprint;
 }
+// Delete workout
+void deleteWorkout(const string& targetDate) {
+    ifstream file("WorkoutData.txt");
+    ofstream tempFile("temp.txt");
+    string line;
+    bool deleteLines = false;
+
+    while (getline(file, line)) {
+        // Detect start of a workout
+        if (line.substr(0, 15) == "Day of the Week") {
+            if (line.find(targetDate) != string::npos) {
+                deleteLines = true;
+            }
+        }
+        // Detect end of a workout
+        if (line.substr(0, 10) == "==========") {
+            deleteLines = false;
+        }
+        // Write lines not marked for deletion to the temp file
+        if (!deleteLines) {
+            tempFile << line << "\n";
+        }
+    }
+    file.close();
+    tempFile.close();
+
+    // Remove the original file and rename the temporary file
+    remove("WorkoutData.txt");
+    rename("temp.txt", "WorkoutData.txt");
+}
+
+
+// Main function
 int main() {
     string dayOfTheWeek = day();
     string workoutDate = date();
     string instructorName = workoutInstructor();
-    string inclineData = TreadmillData();
+    string inclineData = data();
+    int sprintData = treadmillSprint();
+
     // Open a file in write mode.
     ofstream outfile;
     outfile.open("WorkoutData.txt");
@@ -77,9 +114,22 @@ int main() {
     outfile << "Workout Date: " << workoutDate << "\n";
     outfile << "Instructor Name: " << instructorName << "\n";
     outfile << "Incline Data: " << inclineData << "\n";
+    outfile << "Sprint Data: " << sprintData << "\n";
+
+    if(choice == 1) {
+        // Your existing code to add a workout
+    } else if (choice == 2) {
+        string targetDate;
+        cout << "Enter the date of the workout you want to delete: ";
+        cin >> targetDate;
+        deleteWorkout(targetDate);
+    } else if (choice == 3) {
+        return 0;
+    }
 
     // Close the file
     outfile.close();
     return 0;
 
 }
+
