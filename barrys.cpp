@@ -116,12 +116,12 @@ void deleteWorkout(string targetDate) {
 
     while (getline(file, line)) {
         // If we find the date to delete, set flag to true to start deleting
-        if (line.find("Workout Date: " + targetDate) != string::npos) {
+        if (line.find("Workout Date: " + targetDate) < line.size()) {
             deleteSection = true;
         }
 
         // If we find a new workout while in delete mode, stop deleting
-        if (deleteSection && line.find("Workout Date: ") != string::npos && line.find(targetDate) == string::npos) {
+        if (deleteSection && line.find("Workout Date: ") < line.size() && line.find(targetDate) >= line.size()) {
             deleteSection = false;
         }
 
@@ -138,8 +138,6 @@ void deleteWorkout(string targetDate) {
     remove("WorkoutData.txt");
     rename("temp.txt", "WorkoutData.txt");
 }
-
-
 
 
 int main() {
