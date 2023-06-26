@@ -1,10 +1,9 @@
-#include "barrys.h"
 #include <iostream>
 #include <algorithm>
 #include <map>
 #include <numeric>
 #include <chrono>
-#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -71,20 +70,6 @@ string workoutInstructor() {
     string inputWorkoutInstructor;
     cout << "Please enter the name of your instructor: ";
     getline(cin, inputWorkoutInstructor);
-
-    // Check if the name is empty
-    if (inputWorkoutInstructor.empty()) {
-        cout << "Invalid input. Please enter a valid instructor name. \n";
-        exit(1);
-    }
-
-    // Check if the name contains any non-alphabetic characters
-    for (char ch : inputWorkoutInstructor) {
-        if (!isalpha(ch) && !isspace(ch)) {
-            cout << "Invalid input. Please enter a valid instructor name. \n";
-            exit(1);
-        }
-    }
     return inputWorkoutInstructor;
 }
 
@@ -105,49 +90,47 @@ string data() {
 int treadmillSprint() {
     int inputSprint;
     cout << "What was your fastest sprint? ";
-    //getline(cin, inputSprint);
-    //TODO: Error Check
+    cin >> inputSprint;
+    cin.ignore();  // Ignore the newline character left by cin
     return inputSprint;
 }
 
 // Prompting user to add max weight
 int weight() {
     int inputWeight;
-    cout << "What was your fastest sprint? ";
-    //TODO: Error Check
+    cout << "What was your max weight? ";
+    cin >> inputWeight;
+    cin.ignore();  // Ignore the newline character left by cin
     return inputWeight;
 }
 
 void deleteWorkout(string targetDate) {
     ifstream file("WorkoutData.txt");
-    ofstream tempFile("temp.txt");
+    vector<string> lines;
     string line;
     bool deleteSection = false;
 
     while (getline(file, line)) {
-        // If we find the date to delete, change Flag to true to start deleting
-        //  less than the size of the string, that means it found the substring within the string.
         if (line.find("Workout Date: " + targetDate) < line.size()) {
             deleteSection = true;
         }
-
-        // If we find a new workout while in delete mode, stop deleting
-        if (deleteSection && line.find("Workout Date: ") < line.size() && line.find(targetDate) >= line.size()) {
+        if (deleteSection && line.find("Workout Date: ") < line.size()
+            && line.find(targetDate) >= line.size()) {
             deleteSection = false;
         }
-
-        // If not in delete mode, write the line to the temp file
         if (!deleteSection) {
-            tempFile << line << "\n";
+            lines.push_back(line);
         }
     }
 
     file.close();
-    tempFile.close();
 
-    // Delete the original file and rename the temporary file
-    remove("WorkoutData.txt");
-    rename("temp.txt", "WorkoutData.txt");
+    // Write the data back to the file
+    ofstream outFile("WorkoutData.txt");
+    for (const auto &line : lines) {
+        outFile << line << "\n";
+    }
+    outFile.close();
 }
 
 // Main function
@@ -165,6 +148,7 @@ int main() {
         string instructorName = workoutInstructor();
         string inclineData = data();
         int sprintData = treadmillSprint();
+        int weightData = weight();
 
         ofstream outfile;
         outfile.open("WorkoutData.txt", ios::app); // Append to the existing file
@@ -174,7 +158,7 @@ int main() {
         outfile << "Instructor Name: " << instructorName << "\n";
         outfile << "Incline: " << inclineData << "\n";
         outfile << "Sprint (Max Speed): " << sprintData << "\n";
-        outfile << "Max Weight: " << weight << "\n";
+        outfile << "Max Weight: " << weightData << "\n";
         outfile << "==========\n";
 
         outfile.close();
