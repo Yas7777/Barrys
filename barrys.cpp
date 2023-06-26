@@ -103,10 +103,19 @@ string data() {
 
 // Prompting user to add Treadmill data
 int treadmillSprint() {
-    string input;
-    cout << "What was your fastest sprint level at? ";
-    getline(cin, input);
-    return stoi(input);
+    int inputSprint;
+    cout << "What was your fastest sprint? ";
+    //getline(cin, inputSprint);
+    //TODO: Error Check
+    return inputSprint;
+}
+
+// Prompting user to add max weight
+int weight() {
+    int inputWeight;
+    cout << "What was your fastest sprint? ";
+    //TODO: Error Check
+    return inputWeight;
 }
 
 void deleteWorkout(string targetDate) {
@@ -163,8 +172,9 @@ int main() {
         outfile << "Day of the Week: " << dayOfWorkout.first << "\n";
         outfile << "Workout Focus: " << dayOfWorkout.second << "\n";
         outfile << "Instructor Name: " << instructorName << "\n";
-        outfile << "Incline Data: " << inclineData << "\n";
-        outfile << "Sprint Data: " << sprintData << "\n";
+        outfile << "Incline: " << inclineData << "\n";
+        outfile << "Sprint (Max Speed): " << sprintData << "\n";
+        outfile << "Max Weight: " << weight << "\n";
         outfile << "==========\n";
 
         outfile.close();
