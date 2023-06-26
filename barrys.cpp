@@ -11,6 +11,7 @@ using namespace std;
 // Prompting User to enter the date
 string date() {
     string inputDate;
+
     cout << "Please enter the date of your workout (MM/DD/YYYY): ";
     getline(cin, inputDate);
 
@@ -115,7 +116,8 @@ void deleteWorkout(string targetDate) {
     bool deleteSection = false;
 
     while (getline(file, line)) {
-        // If we find the date to delete, set flag to true to start deleting
+        // If we find the date to delete, change Flag to true to start deleting
+        //  less than the size of the string, that means it found the substring within the string.
         if (line.find("Workout Date: " + targetDate) < line.size()) {
             deleteSection = true;
         }
@@ -139,10 +141,11 @@ void deleteWorkout(string targetDate) {
     rename("temp.txt", "WorkoutData.txt");
 }
 
-
+// Main function
 int main() {
     string input;
     int choice;
+    cout << "****************BARRYS BASIC AF WORKOUT LOG****************\n";
     cout << "Enter your choice (1 for adding a workout, 2 for deleting a workout, 3 for exit): ";
     getline(cin, input);
     choice = stoi(input);
