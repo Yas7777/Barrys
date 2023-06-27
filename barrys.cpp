@@ -1,17 +1,11 @@
-#include <iostream>
-#include <algorithm>
-#include <map>
-#include <numeric>
-#include <chrono>
-#include <fstream>
 
+#include "barrys.h"
 using namespace std;
 
 // Prompting User to enter the date
 string date() {
     string inputDate;
-
-    cout << "Please enter the date of your workout (MM/DD/YYYY): ";
+    cout << "Please enter your workout day (MM/DD/YYYY): ";
     getline(cin, inputDate);
 
     // Check if the input date has the correct format (MM/DD/YYYY)
@@ -36,13 +30,14 @@ string date() {
         exit(1);
     }
 
-    return validMonth + "/" + validDay + "/" + validYear;  // Return date in MM/DD/YYYY format
+    // Return date in MM/DD/YYYY format
+    return validMonth + "/" + validDay + "/" + validYear;
 }
 
 // Prompting User to add a day and its associated focus
 pair<string, string> day() {
     string input;
-    cout << "Please enter the day: ";
+    cout << "Please enter your workout day: ";
     getline(cin, input);
 
     map<string, string> workoutDays {
@@ -59,48 +54,54 @@ pair<string, string> day() {
     if (workoutDays.count(input) == 0) {
         cout << "Invalid input. Please enter a valid day of the week. \n";
         exit(1);
+    // Key exists in the map
     } else {
-        // Key exists in the map
         return make_pair(input, workoutDays[input]);
     }
 }
 
+
 // Prompting User to add the instructor's name
 string workoutInstructor() {
     string inputWorkoutInstructor;
-    cout << "Please enter the name of your instructor: ";
+    cout << " Instructor name: ";
     getline(cin, inputWorkoutInstructor);
     return inputWorkoutInstructor;
 }
 
-// Prompting user to add Treadmill data
+// Prompting user to add Treadmill incline data
 string data() {
     string inputIncline;
-    cout << "Was there an incline? (y/n only): ";
+    cout << "Did you use incline? (Y/N only): ";
     cin >> inputIncline;
     if (inputIncline != "Y" && inputIncline != "y" && inputIncline != "n" && inputIncline != "N") {
         cout << "Invalid input. Please enter 'Y' or 'N' only. \n";
         exit(1);
     }
-    cin.ignore();  // Ignore the newline character left by cin
+
+    // Ignore the newline character left by cin
+    cin.ignore();
     return inputIncline;
 }
 
-// Prompting user to add Treadmill data
+// Prompting user to add Treadmill sprint data
 int treadmillSprint() {
     int inputSprint;
-    cout << "What was your fastest sprint? ";
+    cout << "Fastest sprint? ";
     cin >> inputSprint;
-    cin.ignore();  // Ignore the newline character left by cin
+
+    // Ignore the newline character left by cin
+    cin.ignore();
     return inputSprint;
 }
 
 // Prompting user to add max weight
 int weight() {
     int inputWeight;
-    cout << "What was your max weight? ";
+    cout << "Max weight lifted? ";
     cin >> inputWeight;
-    cin.ignore();  // Ignore the newline character left by cin
+    cin.ignore();
+    // Ignore the newline character left by cin
     return inputWeight;
 }
 
@@ -108,16 +109,23 @@ void deleteWorkout(string targetDate) {
     ifstream file("WorkoutData.txt");
     vector<string> lines;
     string line;
+    // set flag
     bool deleteSection = false;
 
     while (getline(file, line)) {
+        // If we find the data to delete, change Flag to true to start deleting
+        // If the concantenation < size of the string, that it means it found the substring
+        // within the string
         if (line.find("Workout Date: " + targetDate) < line.size()) {
             deleteSection = true;
         }
+
+        // If we find a new workout while in delete mode - stop deleting (set flag to false)
         if (deleteSection && line.find("Workout Date: ") < line.size()
             && line.find(targetDate) >= line.size()) {
             deleteSection = false;
         }
+        // deleteSection == false
         if (!deleteSection) {
             lines.push_back(line);
         }
@@ -137,7 +145,7 @@ void deleteWorkout(string targetDate) {
 int main() {
     string input;
     int choice;
-    cout << "****************BARRYS BASIC AF WORKOUT LOG****************\n";
+    cout << "****************BARRY'S BASIC AF WORKOUT LOG****************\n";
     cout << "Enter your choice (1 for adding a workout, 2 for deleting a workout, 3 for exit): ";
     getline(cin, input);
     choice = stoi(input);
@@ -160,13 +168,15 @@ int main() {
         outfile << "Sprint (Max Speed): " << sprintData << "\n";
         outfile << "Max Weight: " << weightData << "\n";
         outfile << "==========\n";
-
         outfile.close();
+        cout << "Workout successfully logged in WorkoutData.txt file. Check out the file created ";
+
     } else if (choice == 2) {
         string targetDate;
         cout << "Enter the date of the workout you want to delete (MM/DD/YYYY): ";
         getline(cin, targetDate);
         deleteWorkout(targetDate);
+        cout << "Workout for" << targetDate << " successfully deleted.";
     } else if (choice == 3) {
         return 0;
     }
