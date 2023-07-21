@@ -1,14 +1,13 @@
-
 #include "barrys.h"
 using namespace std;
 
 // Prompting User to enter the date
-string date() {
+string workoutDate() {
     string inputDate;
-    cout << "Please enter your workout day (MM/DD/YYYY): ";
+    cout << "Please enter the date of your workout (MM/DD/YYYY): ";
     getline(cin, inputDate);
 
-    // Check if the input date has the correct format (MM/DD/YYYY)
+    // Validation Check on date format.
     if (inputDate.size() != 10 || inputDate[2] != '/' || inputDate[5] != '/') {
         cout << "Invalid date. Please enter a date in the format MM/DD/YYYY. \n";
         exit(1);
@@ -54,7 +53,7 @@ pair<string, string> day() {
     if (workoutDays.count(input) == 0) {
         cout << "Invalid input. Please enter a valid day of the week. \n";
         exit(1);
-    // Key exists in the map
+        // Key exists in the map
     } else {
         return make_pair(input, workoutDays[input]);
     }
@@ -64,7 +63,7 @@ pair<string, string> day() {
 // Prompting User to add the instructor's name
 string workoutInstructor() {
     string inputWorkoutInstructor;
-    cout << " Instructor name: ";
+    cout << "Instructor's name: ";
     getline(cin, inputWorkoutInstructor);
     return inputWorkoutInstructor;
 }
@@ -79,7 +78,6 @@ string data() {
         exit(1);
     }
 
-    // Ignore the newline character left by cin
     cin.ignore();
     return inputIncline;
 }
@@ -90,7 +88,11 @@ int treadmillSprint() {
     cout << "Fastest sprint? ";
     cin >> inputSprint;
 
-    // Ignore the newline character left by cin
+    if (inputSprint > 0) {
+        return inputSprint;
+    } else {
+        cout << "Invalid input. Please enter a positive integer.\n";
+    }
     cin.ignore();
     return inputSprint;
 }
@@ -98,10 +100,15 @@ int treadmillSprint() {
 // Prompting user to add max weight
 int weight() {
     int inputWeight;
-    cout << "Max weight lifted? ";
+    cout << "Max weight (lbs) lifted? ";
     cin >> inputWeight;
+    if (inputWeight > 0) {
+        return inputWeight;
+    } else {
+        cout << "Invalid input. Please enter a positive integer.\n";
+    }
+
     cin.ignore();
-    // Ignore the newline character left by cin
     return inputWeight;
 }
 
@@ -114,7 +121,7 @@ void deleteWorkout(string targetDate) {
 
     while (getline(file, line)) {
         // If we find the data to delete, change Flag to true to start deleting
-        // If the concantenation < size of the string, that it means it found the substring
+        // If the concatenation < size of the string, that it means it found the substring
         // within the string
         if (line.find("Workout Date: " + targetDate) < line.size()) {
             deleteSection = true;
@@ -150,8 +157,9 @@ int main() {
     getline(cin, input);
     choice = stoi(input);
 
+    // Choice 1 - Add a workout
     if (choice == 1) {
-        string workoutDate = date();
+        string date = workoutDate();
         pair<string, string> dayOfWorkout = day();
         string instructorName = workoutInstructor();
         string inclineData = data();
@@ -160,7 +168,7 @@ int main() {
 
         ofstream outfile;
         outfile.open("WorkoutData.txt", ios::app); // Append to the existing file
-        outfile << "Workout Date: " << workoutDate << "\n";
+        outfile << "Workout Date: " << date << "\n";
         outfile << "Day of the Week: " << dayOfWorkout.first << "\n";
         outfile << "Workout Focus: " << dayOfWorkout.second << "\n";
         outfile << "Instructor Name: " << instructorName << "\n";
@@ -171,12 +179,15 @@ int main() {
         outfile.close();
         cout << "Workout successfully logged in WorkoutData.txt file. Check out the file created ";
 
+        // Choice 2 - Deleting the workout
     } else if (choice == 2) {
         string targetDate;
         cout << "Enter the date of the workout you want to delete (MM/DD/YYYY): ";
         getline(cin, targetDate);
         deleteWorkout(targetDate);
-        cout << "Workout for" << targetDate << " successfully deleted.";
+        cout << "Workout for " << targetDate << " successfully deleted.";
+
+        // Choice 3 - Exit the program
     } else if (choice == 3) {
         return 0;
     }
