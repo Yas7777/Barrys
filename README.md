@@ -14,7 +14,7 @@ Barry is not a man (in this scenario) - Barry's refers to a 60 min HIIT workout 
 
 4. Future Improvements
 
-## Features
+## Features :boom:
 
 The program stores the workout data in a text file called `WorkoutData.txt.` Each workout is written as a block of lines, including the date, day, workout focus, instructor name, incline, sprint speed, and max weight lifted.
 
@@ -67,6 +67,7 @@ The delete function was a hassle and is still not clean as I like it to be – b
 In the same vein, I wanted the user to be able to edit the workout, but that was like quicksand.
 
 ## Future Improvements
+
 My primary motivation was to understand  C++ and *make stuff work*
 
 - [ ] Ability for the user to be able to edit a workout in addition to be able to delete a workout seamlessly
