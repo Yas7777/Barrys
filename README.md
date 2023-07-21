@@ -49,10 +49,11 @@ The program stores the workout data in a text file called `WorkoutData.txt.` Eac
 ## CLI Tool Menu Options
 
 ### Option 1:  Add a workout
-readme_assets/Option_1.png
+![Model](readme_assets/Option_1.png)
 
 ### Option 2:  Delete a workout
-readme_assets/Option_2.png
+![Model](readme_assets/Option_2.png)
+
 
 ### Option 3: Exit !
 
