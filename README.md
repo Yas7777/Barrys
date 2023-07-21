@@ -1,6 +1,6 @@
 # Barry's Workout Log
 
-This project idea combined my desire to learn C++ and a way to catalog my Barry's workouts. This is a CLI tool written in C++ where the user can enter specific stats related to the workout. (see Using the Program for more info). It allows users to log their workouts in a separate .txt file. If needed, the user can also delete a workout related to a specific day.
+This is a CLI tool written in C++ where the user can enter specific stats related to Barry's workout (see Using the Program for more info). This project idea combines my desire to learn C++ and a way to catalog my Barry's workouts. It allows users to log their workouts in a separate .txt file. If needed, the user can also delete a workout related to a specific day.
 
 Barry is not a man (in this scenario) - Barry's refers to a 60 min HIIT workout focused on running and floor exercises. In case this piqued your interest - https://www.barrys.com
 
