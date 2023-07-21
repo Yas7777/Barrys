@@ -51,6 +51,9 @@ The program stores the workout data in a text file called `WorkoutData.txt.` Eac
 ### Option 1:  Add a workout
 ![Model](readme_assets/Option_1.png)
 
+### Text file when the workout is added
+![Model](readme_assets/Textfile_Option_1.png)
+
 ### Option 2:  Delete a workout
 ![Model](readme_assets/Option_2.png)
 
