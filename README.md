@@ -34,17 +34,17 @@ The program stores the workout data in a text file called `WorkoutData.txt.` Eac
 
 ## Using the Program
 
-1. Open up your Terminal (On Mac – go to your finder and type "Terminal")
+1. Open up your Terminal (On Mac – go to your finder and type `Terminal`)
 
 2. Please check your relevant O/S to find your specific terminal instructions
 
-3. Make sure you have the g++ compiler installed on your Mac. You can check this by typing g++ --version in your terminal.
+3. Make sure you have the g++ compiler installed on your Mac. You can check this by typing `g++ --version` in your terminal.
 
-4. Navigate to the directory containing the cpp file using the cd command. For example, if your code is in a folder on your desktop called "Project," you should type cd Desktop/Project/.
+4. Navigate to the directory containing the cpp file using the cd command. For example, if your code is in a folder on your desktop called "Project," you should type `cd Desktop/Project/`.
 
-5. To compile the code, you can use the g++ command. If your source file is named barrys.cpp, type g++ -std=c++11 barrys.cpp -o barrys . This will compile barrys.cpp into an executable named barrys.
+5. To compile the code, you can use the `g++` command. If your source file is named barrys.cpp, type `g++ -std=c++11 barrys.cpp -o barrys`. This will compile barrys.cpp into an executable named barrys.
 
-6. Congrats! If there were no compilation errors, your code has been successfully compiled. Now, you can run the program by typing ./barrys.
+6. Congrats! If there were no compilation errors, your code has been successfully compiled. Now, you can run the program by typing `./barrys`.
 
 ## CLI Tool Menu Options
 
